@@ -34,9 +34,9 @@ class DBManager2 {
 
     static {
         // FILL these fields with database proper name, user and password before runnig clifis.
-        String clifisBD = "";
-        String username = "";
-        String password = "";
+        String clifisBD = "clifisBDdev";
+        String username = "gais";
+        String password = "grupoguay";
 
         PoolProperties p = new PoolProperties();
         p.setUrl("jdbc:mysql://localhost:3306/" + clifisBD + "?useUnicode=true&characterEncoding=utf-8");
