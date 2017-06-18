@@ -248,6 +248,7 @@ public class GestorPacientes  implements Serializable {
         return resultado;
     }
 
+    @SuppressWarnings("unused")
     public List<Paciente> getPacientes() throws GestorException {
 
         ArrayList<Paciente> resultado = new ArrayList<>();
@@ -291,7 +292,8 @@ public class GestorPacientes  implements Serializable {
      * Método que nos cuenta los pacientes que hay en la base de datos.
      * @return El número de pacientes. Si hay error, devuelve -1.
      */
-    public int getNumeroPacientes() {
+   @SuppressWarnings("unused")
+   public int getNumeroPacientes() {
 
         int resultado = -1;
         String SQL = "SELECT count(Pac_Id) FROM Paciente";
@@ -311,5 +313,5 @@ public class GestorPacientes  implements Serializable {
         }
 
         return resultado;
-    }
+   }
 }
