@@ -130,7 +130,7 @@ public class AltaCita extends HttpServlet {
 
         // Se recogen los datos del formulario.
         try {
-            Paciente paciente = this.gestorPacientes.getPacienteFromDNI(req.getParameter("dni"));
+            Paciente paciente = this.gestorPacientes.getPacienteFromIDSEG(req.getParameter("dni"));
             String[] aux = req.getParameter("horaCita").split(",");
             idConsulta = Integer.parseInt(aux[0]);
             Consulta consulta = this.gestorConsultas.getConsultaFromId(idConsulta);
@@ -395,7 +395,7 @@ public class AltaCita extends HttpServlet {
         } else {
             LOG.trace("Recibido el DNI: {}", dniChanged);
             try {
-                Paciente paciente = this.gestorPacientes.getPacienteFromDNI(dniChanged);
+                Paciente paciente = this.gestorPacientes.getPacienteFromIDSEG(dniChanged);
                 resultado = GSON.toJson(paciente);
             } catch (GestorException e) {
                 LOG.debug("Problema al pedir los datos de un paciente por DNI.", e);

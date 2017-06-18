@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class GestorPacientes  implements Serializable {
 
-    final static Logger LOG = LoggerFactory.getLogger("es.upm.etsisi.clifis.gestores.GestorPacientes");
+    private final static Logger LOG = LoggerFactory.getLogger("es.upm.etsisi.clifis.gestores.GestorPacientes");
 
     /**
      * Da de alta un paciente.
@@ -49,21 +49,17 @@ public class GestorPacientes  implements Serializable {
             System.out.println("PACIENTE VACIO");
             throw new GestorException("Paciente vacío");
         }
-        if(paciente.getIdSeg() == null || paciente.getIdSeg().isEmpty()){
+        if(paciente.getIdSeg() == null || paciente.getIdSeg().isEmpty())
             error += "Error de DNI. ";
-        }
         if(paciente.getNombre() == null || paciente.getNombre().isEmpty())
             error+="Error de nombre. ";
-
-        if(paciente.getApellidos() == null || paciente.getApellidos().isEmpty()){
+        if(paciente.getApellidos() == null || paciente.getApellidos().isEmpty())
             error+="Error de apellidos. ";
-        }
         if(paciente.getAseguradora() == null || paciente.getAseguradora().isEmpty())
             error+="Error de aseguradora. ";
-
-        if(!error.isEmpty()) {
+        if(!error.isEmpty())
             throw new GestorException(error);
-        }
+
         try (Connection con = DBManager2.getConn()){
             PreparedStatement pstm = con.prepareStatement(
                     "INSERT INTO Paciente (" +
@@ -80,21 +76,20 @@ public class GestorPacientes  implements Serializable {
             pstm.close();
 
         } catch (SQLException e) {
-            // TODO: Gestionar esta excepción.
+            LOG.debug("Controlada una SQLException al dar de alta un paciente." , e);
             if(e.getMessage().contains("Duplicate entry")){
                 throw new GestorException("Paciente/DNI duplicado");
             }
             throw new GestorException("No se ha podido insertar el paciente en la BD.");
         } catch (DBManager2Exception e) {
-            // TODO: No se ha podido obtener una conexión con la BBDD. Gestionar excepción.
-            e.printStackTrace();
+            LOG.debug("Controlada una DBManager2Exception al dar de alta un paciente." , e);
+            throw new GestorException("Ha habido un problema con la conexión a la base de datos.");
         }
     }
 
     /**
      *
      * @param mod: el paciente que pasamos como parametro para modificar
-     * @return un paciente modificado
      */
     public void modificarPaciente(Paciente mod)throws GestorException, SQLException,DBManager2Exception{
         String error ="";
@@ -116,10 +111,9 @@ public class GestorPacientes  implements Serializable {
         if(!error.isEmpty()) {
             throw new GestorException(error);
         }
-        Paciente buscado=null;
+        Paciente buscado;
         try (Connection conex = DBManager2.getConn()){
             buscado =getPacienteFromId(mod.getId());
-            String m ="";
             String SQL = "UPDATE Paciente SET Pac_Nombre=?, Pac_Apellidos=?, Pac_SegMedico=?, Pac_IDSEG=? WHERE Pac_Id=?";
             LOG.trace("SQL1: " + SQL);
 
@@ -144,8 +138,8 @@ public class GestorPacientes  implements Serializable {
     }
 
     public List<Paciente> getPaciente(){
-        Paciente resultado = null;
-        ArrayList<Paciente> listado = new ArrayList<Paciente>();
+        Paciente resultado;
+        ArrayList<Paciente> listado = new ArrayList<>();
         try (Connection conex = DBManager2.getConn()){
             String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico,Pac_IDSEG, Pac_Id FROM Paciente ORDER BY Pac_Id";
             LOG.trace("SQL: " + SQL);
@@ -169,27 +163,25 @@ public class GestorPacientes  implements Serializable {
                 listado.add(resultado);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.debug("Controlada una SQLException." , e);
         } catch (DBManager2Exception e) {
-            e.printStackTrace();
+            LOG.debug("Controlada una DBManager2Exception." , e);
         }
         return listado;
     }
 
-    public Paciente getPacienteFromDNI (String idSeg) throws GestorException{
+    public Paciente getPacienteFromIDSEG (String idSeg) throws GestorException{
 
         Paciente resultado = null;
 
         try (Connection conex = DBManager2.getConn()){
             String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico, Pac_Id FROM Paciente WHERE Pac_IDSEG LIKE ?";
-            LOG.trace("SQL_getPacienteFromDNI: " + SQL);
 
             PreparedStatement pstm = conex.prepareStatement(SQL);
             pstm.setString(1, idSeg);
 
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-
                 resultado = new PacienteBuilder()
                         .setApellidos(rs.getString("Pac_Apellidos"))
                         .setAseguradora(rs.getString("Pac_SegMedico"))
@@ -198,11 +190,11 @@ public class GestorPacientes  implements Serializable {
                         .setId(rs.getInt("Pac_Id"))
                         .build();
             } else {
-                // TODO: No se ha encontrado el DNI... No hay paciente :-?
+                LOG.debug("No se ha encontrado ningún paciente con ID_SEG: {}.", idSeg);
             }
 
             if (rs.next()) {
-                // TODO: Hay más de un paciente con un solo DNI o es un SQL Injection :-?.
+                LOG.debug("Se buscaba un paciente por ID_SEG y se ha encontrado más de uno.");
             }
 
         } catch (SQLException e) {
@@ -238,11 +230,11 @@ public class GestorPacientes  implements Serializable {
                         .setId(id)
                         .build();
             } else {
-                // TODO: No se ha encontrado el DNI... No hay paciente :-?
+                LOG.debug("No se ha encontrado ningún paciente con id: {}.", id);
             }
 
             if (rs.next()) {
-                // TODO: Hay más de un paciente con un solo DNI o es un SQL Injection :-?.
+                LOG.debug("Se buscaba un paciente por ID y se ha encontrado más de uno.");
             }
 
         } catch (SQLException e) {
@@ -293,20 +285,6 @@ public class GestorPacientes  implements Serializable {
         }
 
         return resultado;
-    }
-
-    /**
-     *
-     * @param cadena
-     * @return V/F
-     */
-    private static boolean isNumeric(String cadena){
-        try {
-            Integer.parseInt(cadena);
-            return true;
-        } catch (NumberFormatException nfe){
-            return false;
-        }
     }
 
    /**
