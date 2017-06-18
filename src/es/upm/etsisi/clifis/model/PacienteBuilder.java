@@ -23,7 +23,7 @@ public class PacienteBuilder {
     private int id;
     private String nombre;
     private String apellidos;
-    private String dni;
+    private String idSeg;
     private String aseguradora;
 
     public PacienteBuilder setId(int id) {
@@ -41,8 +41,8 @@ public class PacienteBuilder {
         return this;
     }
 
-    public PacienteBuilder setDni(String dni) {
-        this.dni = dni;
+    public PacienteBuilder setIdSeg(String idSeg) {
+        this.idSeg = idSeg;
         return this;
     }
 
@@ -52,7 +52,7 @@ public class PacienteBuilder {
     }
 
     public Paciente build(){
-        return new Paciente(id, nombre, apellidos, dni, aseguradora);
+        return new Paciente(id, nombre, apellidos, idSeg, aseguradora);
     }
 
 

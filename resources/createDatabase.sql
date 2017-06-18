@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `Medico_Especialidad` (
 -- Volcando estructura para tabla clifisBDdev.Paciente
 DROP TABLE IF EXISTS `Paciente`;
 CREATE TABLE IF NOT EXISTS `Paciente` (
-  `Pac_DNI`       VARCHAR(20)
+  `Pac_IDSEG`       VARCHAR(20)
                   COLLATE utf8_unicode_ci NOT NULL,
   `Pac_Nombre`    VARCHAR(20)
                   COLLATE utf8_unicode_ci NOT NULL,

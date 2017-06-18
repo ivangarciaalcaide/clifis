@@ -47,9 +47,9 @@ public class GestorPacientes  implements Serializable {
         String error ="";
         if(paciente == null){
             System.out.println("PACIENTE VACIO");
-            throw new GestorException("Paciente vacio");
+            throw new GestorException("Paciente vacío");
         }
-        if(paciente.getDni() == null || paciente.getDni().isEmpty() || !dniCorrecto(paciente.getDni())){
+        if(paciente.getIdSeg() == null || paciente.getIdSeg().isEmpty()){
             error += "Error de DNI. ";
         }
         if(paciente.getNombre() == null || paciente.getNombre().isEmpty())
@@ -67,11 +67,11 @@ public class GestorPacientes  implements Serializable {
         try (Connection con = DBManager2.getConn()){
             PreparedStatement pstm = con.prepareStatement(
                     "INSERT INTO Paciente (" +
-                            "Pac_DNI , Pac_Nombre , Pac_Apellidos, Pac_SegMedico) " +
+                            "Pac_IDSEG , Pac_Nombre , Pac_Apellidos, Pac_SegMedico) " +
                             "VALUES" +
                             " ( ?, ?, ?, ?)"
             );
-            pstm.setString(1,paciente.getDni());
+            pstm.setString(1,paciente.getIdSeg());
             pstm.setString(2,paciente.getNombre());
             pstm.setString(3,paciente.getApellidos());
             pstm.setString(4,paciente.getAseguradora());
@@ -90,7 +90,6 @@ public class GestorPacientes  implements Serializable {
             e.printStackTrace();
         }
     }
-    //buscar el paciente a traves de su dni para modificarlo
 
     /**
      *
@@ -102,7 +101,7 @@ public class GestorPacientes  implements Serializable {
         if(mod == null){
             throw new GestorException("Paciente vacio");
         }
-        if(mod.getDni() == null || mod.getDni().isEmpty() || !dniCorrecto(mod.getDni())){
+        if(mod.getIdSeg() == null || mod.getIdSeg().isEmpty()){
             error += "Error de DNI. ";
         }
         if(mod.getNombre() == null || mod.getNombre().isEmpty())
@@ -121,7 +120,7 @@ public class GestorPacientes  implements Serializable {
         try (Connection conex = DBManager2.getConn()){
             buscado =getPacienteFromId(mod.getId());
             String m ="";
-            String SQL = "UPDATE Paciente SET Pac_Nombre=?, Pac_Apellidos=?, Pac_SegMedico=?, Pac_DNI=? WHERE Pac_Id=?";
+            String SQL = "UPDATE Paciente SET Pac_Nombre=?, Pac_Apellidos=?, Pac_SegMedico=?, Pac_IDSEG=? WHERE Pac_Id=?";
             LOG.trace("SQL1: " + SQL);
 
             PreparedStatement pstm = conex.prepareStatement(SQL);
@@ -129,7 +128,7 @@ public class GestorPacientes  implements Serializable {
             pstm.setString(1, mod.getNombre());
             pstm.setString(2, mod.getApellidos());
             pstm.setString(3, mod.getAseguradora());
-            pstm.setString(4, mod.getDni());
+            pstm.setString(4, mod.getIdSeg());
             int aux= pstm.executeUpdate();
             LOG.trace("Aux: {}", aux);
         } catch (SQLException e) {
@@ -148,7 +147,7 @@ public class GestorPacientes  implements Serializable {
         Paciente resultado = null;
         ArrayList<Paciente> listado = new ArrayList<Paciente>();
         try (Connection conex = DBManager2.getConn()){
-            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico,Pac_DNI, Pac_Id FROM Paciente ORDER BY Pac_Id";
+            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico,Pac_IDSEG, Pac_Id FROM Paciente ORDER BY Pac_Id";
             LOG.trace("SQL: " + SQL);
 
             PreparedStatement pstm = conex.prepareStatement(SQL);
@@ -157,13 +156,13 @@ public class GestorPacientes  implements Serializable {
                 String nombre = rs.getString("Pac_Nombre");
                 String apellidos = rs.getString("Pac_Apellidos");
                 String seguro = rs.getString("Pac_SegMedico");
-                String dni= rs.getString("Pac_DNI");
+                String idSeg= rs.getString("Pac_IDSEG");
                 int id = rs.getInt("Pac_Id");
 
                 resultado = new PacienteBuilder()
                         .setApellidos(apellidos)
                         .setAseguradora(seguro)
-                        .setDni(dni)
+                        .setIdSeg(idSeg)
                         .setNombre(nombre)
                         .setId(id)
                         .build();
@@ -177,23 +176,16 @@ public class GestorPacientes  implements Serializable {
         return listado;
     }
 
-    /**
-     *
-     * @param dni
-     * @return un paciente con el dni x
-     * @throws GestorException
-     */
-
-    public Paciente getPacienteFromDNI (String dni) throws GestorException{
+    public Paciente getPacienteFromDNI (String idSeg) throws GestorException{
 
         Paciente resultado = null;
 
         try (Connection conex = DBManager2.getConn()){
-            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico, Pac_Id FROM Paciente WHERE Pac_DNI LIKE ?";
+            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico, Pac_Id FROM Paciente WHERE Pac_IDSEG LIKE ?";
             LOG.trace("SQL_getPacienteFromDNI: " + SQL);
 
             PreparedStatement pstm = conex.prepareStatement(SQL);
-            pstm.setString(1, dni);
+            pstm.setString(1, idSeg);
 
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
@@ -201,7 +193,7 @@ public class GestorPacientes  implements Serializable {
                 resultado = new PacienteBuilder()
                         .setApellidos(rs.getString("Pac_Apellidos"))
                         .setAseguradora(rs.getString("Pac_SegMedico"))
-                        .setDni(dni)
+                        .setIdSeg(idSeg)
                         .setNombre(rs.getString("Pac_Nombre"))
                         .setId(rs.getInt("Pac_Id"))
                         .build();
@@ -229,7 +221,7 @@ public class GestorPacientes  implements Serializable {
         Paciente resultado = null;
 
         try (Connection conex = DBManager2.getConn()){
-            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico, Pac_DNI FROM Paciente WHERE Paciente.Pac_Id LIKE ?";
+            String SQL = "SELECT Pac_Nombre, Pac_Apellidos, Pac_SegMedico, Pac_IDSEG FROM Paciente WHERE Paciente.Pac_Id LIKE ?";
             LOG.trace("SQL_getPacienteFromId: " + SQL);
 
             PreparedStatement pstm = conex.prepareStatement(SQL);
@@ -241,7 +233,7 @@ public class GestorPacientes  implements Serializable {
                 resultado = new PacienteBuilder()
                         .setApellidos(rs.getString("Pac_Apellidos"))
                         .setAseguradora(rs.getString("Pac_SegMedico"))
-                        .setDni(rs.getString("Pac_DNI"))
+                        .setIdSeg(rs.getString("Pac_IDSEG"))
                         .setNombre(rs.getString("Pac_Nombre"))
                         .setId(id)
                         .build();
@@ -270,7 +262,7 @@ public class GestorPacientes  implements Serializable {
 
         try (Connection conex = DBManager2.getConn()){
             PreparedStatement ptstm = conex.prepareStatement(
-                    "SELECT Pac_Id, Pac_DNI,Pac_Nombre, Pac_Apellidos, Pac_SegMedico" + //BBDD
+                    "SELECT Pac_Id, Pac_IDSEG,Pac_Nombre, Pac_Apellidos, Pac_SegMedico" + //BBDD
                             " FROM Paciente " + //BBDD
                             "ORDER BY Pac_Apellidos ASC");//BBDD
 
@@ -278,14 +270,14 @@ public class GestorPacientes  implements Serializable {
 
             while(rs.next()) {
                 int id = rs.getInt("Pac_Id");//BBDD
-                String dni = rs.getString("Pac_DNI");//BBDD
+                String idSeg = rs.getString("Pac_IDSEG");//BBDD
                 String nombre = rs.getString("Pac_Nombre");//BBDD
                 String apellidos = rs.getString("Pac_Apellidos");
                 String segMedico = rs.getString("Pac_segMedico");//BBDD
 
                 resultado.add(new PacienteBuilder()
                         .setId(id)
-                        .setDni(dni)
+                        .setIdSeg(idSeg)
                         .setNombre(nombre)
                         .setApellidos(apellidos)
                         .setAseguradora(segMedico)
@@ -317,29 +309,7 @@ public class GestorPacientes  implements Serializable {
         }
     }
 
-    /**
-     *
-     * @param dni
-     * @return V/F el formato de dni
-     */
-    private static boolean dniCorrecto(String dni){
-        boolean result=false;
-        char[] arr = {'T','R','W','A','G','M','Y','F','P','D','X','B',
-                'N','J','Z','S','Q','V','H','L','C','K','E'};
-        int i=0;
-        if(dni.length() == 9 && dni != null && !dni.isEmpty()){
-            String c = dni.substring(0,8);
-            char letra = Character.toUpperCase(dni.charAt(8));
-            if(isNumeric(c) && ((letra >= 'A' && letra <='Z') || (letra >= 'a' && letra <='z')))
-                i = Integer.parseInt(c);
-            int resto = i %23;
-            if(arr[resto] == letra)
-                result = true;
-        }
-        return result;
-    }
-
-    /**
+   /**
      * Método que nos cuenta los pacientes que hay en la base de datos.
      * @return El número de pacientes. Si hay error, devuelve -1.
      */

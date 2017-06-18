@@ -47,8 +47,8 @@ This file is part of Clifis.
             $('#nombre').val(paciente.nombre);
             $('#apellidos').val(paciente.apellidos);
             $('#aseguradora').val(paciente.aseguradora);
-            $('#dni')
-                .val(paciente.dni)
+            $('#idseg')
+                .val(paciente.idSeg)
 ;
             $('#id_paciente').val(paciente.id);
             $('#Submit').val('Modificar');
@@ -90,7 +90,7 @@ This file is part of Clifis.
 
                             <label class="control-label" for="alta_paciente">Paciente dado de alta:</label>
                             <span class="list-group-item list-group-item-success" id="alta_paciente">
-                                           D./Da.: ${paciente.nombre} ${paciente.apellidos} con DNI: ${paciente.dni} y aseguradora ${paciente.aseguradora}.
+                                           D./Da.: ${paciente.nombre} ${paciente.apellidos} con ID_ASEGURADORA: ${paciente.idSeg} y aseguradora ${paciente.aseguradora}.
                                     </span>
 
                         </div>
@@ -120,8 +120,8 @@ This file is part of Clifis.
                         <input class="form-control" type="text" name="apellidos" id="apellidos">
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-2" for="dni">DNI</label>
-                        <input class="form-control" type="text" name="dni" id="dni"/>
+                        <label class="control-label col-md-2" for="idseg">ID_SEG</label>
+                        <input class="form-control" type="text" name="idseg" id="idseg"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2" for="aseguradora">Aseguradora</label>

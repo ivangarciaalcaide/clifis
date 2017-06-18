@@ -24,7 +24,8 @@ import java.io.Serializable;
 public class Paciente implements Serializable {
     private String nombre;
     private String apellidos;
-    private String dni;
+    // IdSeg: Identificador para la aseguradora (ej.: Nº de la Seg. Social).
+    private String idSeg;
     private String aseguradora;
     private int id;
 
@@ -53,12 +54,12 @@ public class Paciente implements Serializable {
         this.apellidos = apellidos;
     }
 
-    public String getDni() {
-        return dni;
+    public String getIdSeg() {
+        return this.idSeg;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setIdSeg(String idSeg) {
+        this.idSeg = idSeg;
     }
 
     public String getAseguradora() {
@@ -69,11 +70,11 @@ public class Paciente implements Serializable {
         this.aseguradora = aseguradora;
     }
 
-    public Paciente(int id, String nombre, String apellidos, String dni, String aseguradora) {
+    public Paciente(int id, String nombre, String apellidos, String idSeg, String aseguradora) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.dni = dni;
+        this.idSeg = idSeg;
         this.aseguradora = aseguradora;
     }
 }
