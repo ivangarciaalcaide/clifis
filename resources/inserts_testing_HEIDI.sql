@@ -94,7 +94,7 @@ INSERT INTO `Medico_Especialidad` (`MedEsp_MedId`, `MedEsp_EspId`) VALUES
 
 -- Volcando datos para la tabla clifisBDdev.Paciente: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `Paciente` DISABLE KEYS */;
-INSERT INTO `Paciente` (`Pac_DNI`, `Pac_Nombre`, `Pac_Apellidos`, `Pac_SegMedico`, `Pac_Id`) VALUES
+INSERT INTO `Paciente` (`Pac_IDSEG`, `Pac_Nombre`, `Pac_Apellidos`, `Pac_SegMedico`, `Pac_Id`) VALUES
   ('50200145A', 'Romina', 'Valdepower Vodka', 'Asisa', 1),
   ('00324515F', 'Albano', 'Valdepower Vodka', 'Sanitas', 2),
   ('23455245G', 'Robustiano', 'Patrón de la Costra', 'Seguridad Social', 3),

@@ -61,10 +61,6 @@ public class ModificacionPaciente extends HttpServlet {
             excepciones.add(e);
             req.setAttribute("exception", excepciones);
         }
-        //  req.setAttribute("pacienteParaModificar",paciente);
-
-
-
     }
 }
 

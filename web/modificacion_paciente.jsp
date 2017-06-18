@@ -88,7 +88,7 @@ This file is part of Clifis.
                         <div class="col-sm-12">
                             <label class="control-label" for="paciente_modificado">Paciente modificado:</label>
                             <span class="list-group-item list-group-item-success" id="paciente_modificado">
-                                Sr/a.  ${paciente.nombre}  ${paciente.apellidos}  con la aseguradora:  ${paciente.aseguradora}  y DNI:  ${paciente.dni}.
+                                Sr/a.  ${paciente.nombre}  ${paciente.apellidos}  con la aseguradora:  ${paciente.aseguradora}  y ID_Seguro:  ${paciente.idSeg}.
                             </span>
                             <br/>
                         </div>
@@ -130,7 +130,7 @@ This file is part of Clifis.
                             <th>Nombre</th>
                             <th>Apellidos</th>
                             <th>Aseguradora</th>
-                            <th>DNI</th>
+                            <th>ID Seguro</th>
                             <th class="sorter-false">Modificar</th>
                         </tr>
                         </thead>
@@ -140,12 +140,12 @@ This file is part of Clifis.
                                 text-align: center;
                             }
                         </style>
-                        <c:forEach items="${applicationScope.gestor_pacientes.pacientes}" var="paciente"                                   varStatus="loop">
+                        <c:forEach items="${applicationScope.gestor_pacientes.pacientes}" var="paciente" varStatus="loop">
                             <tr>
                                 <td>${paciente.nombre}</td>
                                 <td>${paciente.apellidos}</td>
                                 <td>${paciente.aseguradora}</td>
-                                <td>${paciente.dni}</td>
+                                <td>${paciente.idSeg}</td>
                                 <td>
                                     <label><input type="radio" name="modificar_paciente" value="${paciente.id}"></label>
                                 </td>

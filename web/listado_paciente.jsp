@@ -37,7 +37,7 @@ This file is part of Clifis.
                 <tr>
                     <th>Nombre</th>
                     <th>Apellidos</th>
-                    <th>DNI</th>
+                    <th>ID_Seguro</th>
                     <th>Aseguradora</th>
                 </tr>
                 </thead>
@@ -47,7 +47,7 @@ This file is part of Clifis.
                     <tr>
                         <td>${paciente.nombre}</td>
                         <td>${paciente.apellidos}</td>
-                        <td>${paciente.dni}</td>
+                        <td>${paciente.idSeg}</td>
                         <td>${paciente.aseguradora}</td>
                     </tr>
                 </c:forEach>

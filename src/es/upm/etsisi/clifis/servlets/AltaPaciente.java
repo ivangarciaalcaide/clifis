@@ -37,7 +37,7 @@ public class AltaPaciente extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String dni = req.getParameter("dni");
+        String idSeg = req.getParameter("idseg");
         String nombre = req.getParameter("nombre");
         String apellidos = req.getParameter("apellidos");
         String aseguradora = req.getParameter("aseguradora");
@@ -47,7 +47,7 @@ public class AltaPaciente extends HttpServlet {
         int num;
 
         Paciente paciente = new PacienteBuilder()
-                .setDni(dni)
+                .setIdSeg(idSeg)
                 .setApellidos(apellidos)
                 .setNombre(nombre)
                 .setAseguradora(aseguradora)
@@ -68,7 +68,7 @@ public class AltaPaciente extends HttpServlet {
                         System.out.println("--------modificar-------");
                         gestor.modificarPaciente(paciente);
                     }catch(SQLException e){
-                        fallo = "DNI duplicado";
+                        fallo = "ID_SEG duplicado";
                     }catch (GestorException e) {
                        fallo = e.getMessage();
                     }catch(DBManager2Exception e) {
